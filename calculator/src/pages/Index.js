@@ -212,7 +212,7 @@ const Index = ({ user, logoutUser }) => {
           </ButtonBox>
         </Wrapper>
         {view
-          ? <div onClick={() => setView(false)} style={style.terbilang}>
+          ? <div style={style.terbilang}>
             Terbilang : <br/>{angkaTerbilang(calc.num ? calc.num : calc.res)}
           </div>
           : ""
