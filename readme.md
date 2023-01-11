@@ -1,3 +1,8 @@
 OPEN folder calculator api
+RUN NPM INSTALL
 RUN NPM RUN SEED
+RUN NPM RUN DEV
+
+OPEN folder calculator
+RUN NPM INSTALL
 RUN NPM RUN DEV

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Set config defaults when creating the instance
 export const API = axios.create({
-  baseURL: "http://127.0.0.1:6969/api/v1"
+  baseURL: "http://127.0.0.1:3001/calculator-api"
 });
 
 export const sendToken = () => {

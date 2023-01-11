@@ -1,8 +1,7 @@
 import {
   AUTH_USER,
   LOGOUT_USER,
-  LOGIN_USER,
-  REGISTER_USER
+  LOGIN_USER
 } from "../config/constants";
 import { API, sendToken, setToken, deleteToken } from "../config/api";
 
@@ -30,24 +29,14 @@ export const loginUser = value => {
   };
 };
 
-export const registerUser = value => {
-  return {
-    type: REGISTER_USER,
-    payload: async () => {
-      const res = await API.post("/register", value);
-      const { data } = res.data;
-      if (data.token !== null) setToken(data.token);
-      return data;
-    }
-  };
-};
-
-export const logoutUser = () => {
+export const logoutUser = (value) => {
   return {
     type: LOGOUT_USER,
     payload: async () => {
+      console.log(value)
+      const res = await API.post("/logout", value);
+      const { data } = res.data;
       deleteToken();
-      const data = [];
       return data;
     }
   };

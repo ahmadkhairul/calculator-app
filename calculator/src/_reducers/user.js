@@ -1,7 +1,6 @@
 import {
   AUTH_USER,
   LOGIN_USER,
-  REGISTER_USER,
   LOGOUT_USER
 } from "../config/constants";
 
@@ -16,7 +15,6 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case `${AUTH_USER}_PENDING`:
     case `${LOGIN_USER}_PENDING`:
-    case `${REGISTER_USER}_PENDING`:
     case `${LOGOUT_USER}_PENDING`:
       return {
         ...state,
@@ -24,7 +22,6 @@ const reducer = (state = initialState, action) => {
       };
     case `${AUTH_USER}_FULFILLED`:
     case `${LOGIN_USER}_FULFILLED`:
-    case `${REGISTER_USER}_FULFILLED`:
       return {
         ...state,
         data: action.payload,
@@ -39,7 +36,6 @@ const reducer = (state = initialState, action) => {
         loading: false
       };
     case `${LOGIN_USER}_REJECTED`:
-    case `${REGISTER_USER}_REJECTED`:
     case `${LOGOUT_USER}_REJECTED`:
       return {
         ...state,

@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { logoutUser } from "../_actions/user";
 import { connect } from "react-redux";
 
 const style = {
@@ -24,56 +25,33 @@ const style = {
     marginTop: "20px",
     padding: "0px"
   },
-  landing_subtitle: {
-    fontWeight: "bold",
-    fontSize: "14px",
-    lineHeight: "18px",
-    textAlign: "center",
-    color: "#2C3A47",
-    marginTop: "20px"
-  },
-  landing_login: {
-    width: "335px",
+  logout: {
+    width: "100%",
     height: "45px",
     color: "#ffffff",
     border: "1px solid #A4B0BE",
-
     background: "#CD4559",
     borderRadius: "4px",
     textAlign: "center",
-    marginTop: "20px"
+    marginTop: "20px",
+    cursor: "pointer"
   },
-  landing_register: {
-    width: "335px",
-    height: "45px",
-    color: "#CD4559",
-    border: "1px solid #A4B0BE",
-
-    background: "#ffffff",
-    borderRadius: "4px",
-    textAlign: "center",
-    marginTop: "20px"
-  }
 };
 
-const Index = ({ user }) => {
-  const { isLogin } = user;
-  if (isLogin) return <Redirect to="/articles" />;
+const Index = ({ user, logoutUser }) => {
+  const { data: { id }, isLogin } = user;
+  if (!isLogin) return <Redirect to="/" />;
+
   return (
     <div style={style.container}>
       <div style={style.landing}>
-        <img src="/assets/Logo.svg" alt="mejik fondation logo" width="200px" />
-        <h1 style={style.landing_title}>Welcome to Mejik Foundation!</h1>
-        <h2 style={style.landing_subtitle}>
-          Mejik Foundation is a network that facilitates and empowers the voice
-          of mejik communities
-        </h2>
-        <Link to="/login">
-          <button style={style.landing_login}>Login</button>
-        </Link>
-        <Link to="/register">
-          <button style={style.landing_register}>Register</button>
-        </Link>
+        <h1 style={style.landing_title}>Welcome to Calculator</h1>
+        <button
+          onClick={() => logoutUser({ id })}
+          style={style.logout}
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
@@ -85,4 +63,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Index);
+const mapDispatchToProps = dispatch => {
+  return {
+    logoutUser: value => dispatch(logoutUser(value))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

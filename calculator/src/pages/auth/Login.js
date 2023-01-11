@@ -48,7 +48,6 @@ const style = {
     height: "45px",
     color: "#ffffff",
     border: "1px solid #A4B0BE",
-
     background: "#CD4559",
     borderRadius: "4px",
     textAlign: "center",
@@ -60,38 +59,37 @@ const style = {
 };
 
 const Login = ({ user, loginUser }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { isLogin } = user;
-  if (isLogin) return <Redirect to="/articles" />;
+  const { isLogin, error } = user;
+  if (isLogin) return <Redirect to="/calculator" />;
 
   const value = {
-    email,
+    username,
     password
   };
 
   return (
     <div style={style.container}>
       <div style={style.login}>
-        <img src="assets/Logo.svg" alt="mejik fondation logo" width="200px" />
         <h1 style={style.login_title}>LOGIN</h1>
-        {/* <span style={style.login_error}>
-          {error ? "Email or Password wrong" : ""}
-        </span> */}
+        <span style={style.login_error}>
+          {error ? "Username or Password wrong" : ""}
+        </span>
         <form
           onSubmit={async event => {
             event.preventDefault();
             loginUser(value);
           }}
         >
-          <label style={style.login_label}>Email</label>
+          <label style={style.login_label}>Username</label>
           <input
             style={style.login_form}
-            type="email"
-            placeholder="e.g. najib@mail.com"
+            type="text"
+            placeholder="e.g. user"
             onChange={event => {
-              setEmail(event.target.value);
+              setUsername(event.target.value);
             }}
             required
           />
