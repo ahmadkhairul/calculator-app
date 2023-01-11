@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import angkaTerbilang from '@develoka/angka-terbilang-js';
 import { logoutUser } from "../_actions/user";
 import { connect } from "react-redux";
+import Wrapper from "../components/Wrapper";
+import Screen from "../components/Screen";
+import ButtonBox from "../components/ButtonBox";
+import Button from "../components/Button";
 
 const style = {
   container: {
-    height: "100vh",
     display: "flex",
-    alignItems: "center",
     justifyContent: "center"
   },
   landing: {
-    width: "400px",
+    width: "800px",
     display: "flex",
     alignItems: "center",
     flexDirection: "column"
@@ -26,7 +29,7 @@ const style = {
     padding: "0px"
   },
   logout: {
-    width: "100%",
+    width: "150px",
     height: "45px",
     color: "#ffffff",
     border: "1px solid #A4B0BE",
@@ -34,13 +37,138 @@ const style = {
     borderRadius: "4px",
     textAlign: "center",
     marginTop: "20px",
-    cursor: "pointer"
+    cursor: "pointer",
+    marginBottom: "20px"
   },
+  terbilang: {
+    marginTop: "10px",
+    fontSize: "30px"
+  }
 };
+
+const btnValues = [
+  ["C", "+-", "%", "/"],
+  [7, 8, 9, "X"],
+  [4, 5, 6, "-"],
+  [1, 2, 3, "+"],
+  [0, ".", "b", "="],
+];
+
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
+
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 
 const Index = ({ user, logoutUser }) => {
   const { data: { id }, isLogin } = user;
+
+  let [view, setView] = useState(false);
+  let [calc, setCalc] = useState({
+    sign: "",
+    num: 0,
+    res: 0,
+  });
+
   if (!isLogin) return <Redirect to="/" />;
+
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    if (removeSpaces(calc.num).length < 16) {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0"
+            ? "0"
+            : removeSpaces(calc.num) % 1 === 0
+              ? toLocaleString(Number(removeSpaces(calc.num + value)))
+              : toLocaleString(calc.num + value),
+        res: !calc.sign ? 0 : calc.res,
+      });
+    }
+  };
+
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+  };
+
+  const equalsClickHandler = () => {
+    if (calc.sign && calc.num) {
+      const math = (a, b, sign) =>
+        sign === "+"
+          ? a + b
+          : sign === "-"
+            ? a - b
+            : sign === "X"
+              ? a * b
+              : a / b;
+
+      setCalc({
+        ...calc,
+        res:
+          calc.num === "0" && calc.sign === "/"
+            ? "Can't divide with 0"
+            : toLocaleString(
+              math(
+                Number(removeSpaces(calc.res)),
+                Number(removeSpaces(calc.num)),
+                calc.sign
+              )
+            ),
+        sign: "",
+        num: 0,
+      });
+    }
+  };
+
+  const invertClickHandler = () => {
+    setCalc({
+      ...calc,
+      num: calc.num ? toLocaleString(removeSpaces(calc.num) * -1) : 0,
+      res: calc.res ? toLocaleString(removeSpaces(calc.res) * -1) : 0,
+      sign: "",
+    });
+  };
+
+  const percentClickHandler = () => {
+    let num = calc.num ? parseFloat(removeSpaces(calc.num)) : 0;
+    let res = calc.res ? parseFloat(removeSpaces(calc.res)) : 0;
+
+    setCalc({
+      ...calc,
+      num: (num /= Math.pow(100, 1)),
+      res: (res /= Math.pow(100, 1)),
+      sign: "",
+    });
+  };
+
+  const resetClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      num: 0,
+      res: 0,
+    });
+  };
 
   return (
     <div style={style.container}>
@@ -52,6 +180,43 @@ const Index = ({ user, logoutUser }) => {
         >
           Logout
         </button>
+        <Wrapper>
+          <Screen value={calc.num ? calc.num : calc.res} />
+          <ButtonBox>
+            {btnValues.flat().map((btn, i) => {
+              return (
+                <Button
+                  key={i}
+                  className={btn === "=" || btn === "b" ? "equals" : ""}
+                  value={btn}
+                  onClick={
+                    btn === "C"
+                      ? resetClickHandler
+                      : btn === "+-"
+                        ? invertClickHandler
+                        : btn === "%"
+                          ? percentClickHandler
+                          : btn === "="
+                            ? equalsClickHandler
+                            : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+                              ? signClickHandler
+                              : btn === "."
+                                ? commaClickHandler
+                                : btn === "b"
+                                  ? () => setView(!view)
+                                  : numClickHandler
+                  }
+                />
+              );
+            })}
+          </ButtonBox>
+        </Wrapper>
+        {view
+          ? <div onClick={() => setView(false)} style={style.terbilang}>
+            Terbilang : <br/>{angkaTerbilang(calc.num ? calc.num : calc.res)}
+          </div>
+          : ""
+        }
       </div>
     </div>
   );
