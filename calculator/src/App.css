@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "GoogleSans";
+  src: url("./fonts/GoogleSans-Regular.ttf") format("truetype");
+}
+
+* {
+  font-family: "GoogleSans";
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+input:focus {
+  outline: 1px solid #8854d0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+}
