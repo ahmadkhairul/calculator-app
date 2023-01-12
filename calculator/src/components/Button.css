@@ -14,9 +14,30 @@ button:hover {
 }
 
 .equals {
+  grid-column: 3 / 5;
   background-color: rgb(243, 61, 29);
 }
 
 .equals:hover {
   background-color: rgb(228, 39, 15);
+}
+
+.terbilang {
+  grid-column: 1 / 5;
+  background-color: rgb(37, 163, 108);
+}
+
+.terbilang:hover {
+  grid-column: 1 / 5;
+  background-color: rgb(26, 139, 90);
+}
+
+.terbilangoff {
+  grid-column: 1 / 5;
+  background-color: rgb(204, 26, 26);
+}
+
+.terbilangoff:hover {
+  grid-column: 1 / 5;
+  background-color: rgb(189, 15, 15);
 }

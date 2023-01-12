@@ -46,13 +46,7 @@ const style = {
   }
 };
 
-const btnValues = [
-  ["C", "+-", "%", "/"],
-  [7, 8, 9, "X"],
-  [4, 5, 6, "-"],
-  [1, 2, 3, "+"],
-  [0, ".", "b", "="],
-];
+
 
 const toLocaleString = (num) =>
   String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
@@ -170,10 +164,19 @@ const Index = ({ user, logoutUser }) => {
     });
   };
 
+  const btnValues = [
+    ["C", "+-", "%", "/"],
+    [7, 8, 9, "X"],
+    [4, 5, 6, "-"],
+    [1, 2, 3, "+"],
+    [0, ".", "="],
+    [view ? "Terbilang on" : "Terbilang off"]
+  ];
+
   return (
     <div style={style.container}>
       <div style={style.landing}>
-        <h1 style={style.landing_title}>Welcome to Calculator</h1>
+        <h1 style={style.landing_title}>SELAMAT DATANG DI APLIKASI KALKULATOR V1</h1>
         <button
           onClick={() => logoutUser({ id })}
           style={style.logout}
@@ -187,7 +190,14 @@ const Index = ({ user, logoutUser }) => {
               return (
                 <Button
                   key={i}
-                  className={btn === "=" || btn === "b" ? "equals" : ""}
+                  className={
+                    btn === "="
+                      ? "equals"
+                      : btn === "Terbilang on"
+                        ? "terbilang"
+                        : btn === "Terbilang off"
+                          ? "terbilangoff"
+                          : ""}
                   value={btn}
                   onClick={
                     btn === "C"
@@ -202,9 +212,11 @@ const Index = ({ user, logoutUser }) => {
                               ? signClickHandler
                               : btn === "."
                                 ? commaClickHandler
-                                : btn === "b"
-                                  ? () => setView(!view)
-                                  : numClickHandler
+                                : btn === "Terbilang on"
+                                  ? () => setView(false)
+                                  : btn === "Terbilang off"
+                                    ? () => setView(true)
+                                    : numClickHandler
                   }
                 />
               );
@@ -213,7 +225,7 @@ const Index = ({ user, logoutUser }) => {
         </Wrapper>
         {view
           ? <div style={style.terbilang}>
-            Terbilang : <br/>{angkaTerbilang(calc.num ? calc.num : calc.res)}
+            Terbilang : <br />{angkaTerbilang(calc.num ? calc.num : calc.res)}
           </div>
           : ""
         }

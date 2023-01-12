@@ -33,7 +33,6 @@ export const logoutUser = (value) => {
   return {
     type: LOGOUT_USER,
     payload: async () => {
-      console.log(value)
       const res = await API.post("/logout", value);
       const { data } = res.data;
       deleteToken();

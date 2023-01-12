@@ -73,6 +73,7 @@ const Login = ({ user, loginUser }) => {
   return (
     <div style={style.container}>
       <div style={style.login}>
+        <h1 style={style.login_title}>APLIKASI KALKULATOR V1</h1>
         <h1 style={style.login_title}>LOGIN</h1>
         <span style={style.login_error}>
           {error ? "Username or Password wrong" : ""}

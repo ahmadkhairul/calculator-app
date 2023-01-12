@@ -67,16 +67,22 @@ router.post('/logout', async (req, res) => {
 router.get('/auth', async (req, res) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    const data = jwt.verify(token, process.env.SECRET_KEY);
-    const login = await Login.findOne({ _id: data.user_id, status: true });
-    if (login) {
-      res.status(200).send({
-        message: "succes",
-        data: { id: data.user_id, username: login.username, token }
-      });
+    if (token) {
+      const data = jwt.verify(token, process.env.SECRET_KEY);
+      const login = await Login.findOne({ _id: data.user_id, status: true });
+      if (login) {
+        res.status(200).send({
+          message: "succes",
+          data: { id: data.user_id, username: login.username, token }
+        });
+      } else {
+        res.status(401).send({
+          message: "id not exist or already log out",
+        });
+      }
     } else {
       res.status(401).send({
-        message: "id not exist or already log out",
+        message: "not authenticated",
       });
     }
   } catch (err) {
